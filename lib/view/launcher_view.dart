@@ -17,16 +17,19 @@ class LauncherView extends ConsumerWidget {
     final launcherViewModel = ref.watch(launcherViewModelProvider);
 
     return SafeArea(
-      child: CupertinoPageScaffold(
-        backgroundColor: Colors.transparent,
-        child: GridView.count(
-            crossAxisCount: 4,
-            childAspectRatio: .8,
-            crossAxisSpacing: 0,
-            children: [
-              for (ApplicationWithIcon app in launcherViewModel.apps)
-                AppView(app: app)
-            ]),
+      child: PopScope(
+        canPop: false,
+        child: CupertinoPageScaffold(
+          backgroundColor: Colors.transparent,
+          child: GridView.count(
+              crossAxisCount: 4,
+              childAspectRatio: .8,
+              crossAxisSpacing: 0,
+              children: [
+                for (ApplicationWithIcon app in launcherViewModel.apps)
+                  AppView(app: app)
+              ]),
+        ),
       ),
     );
   }
