@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:launcher/viewmodel/launcher_viewmodel.dart';
 import 'package:pull_down_button/pull_down_button.dart';
+import 'package:share_plus/share_plus.dart';
 
 final launcherViewModelProvider =
     ChangeNotifierProvider((ref) => LauncherViewModel());
@@ -92,12 +93,21 @@ class AppView extends StatelessWidget {
   List<PullDownMenuEntry> get contextMenuList => [
         PullDownMenuItem(
           title: 'Open Settings',
+          icon: CupertinoIcons.settings,
           onTap: () => app.openSettingsScreen(),
         ),
-        if (!(app.systemApp))
+        if (!(app.systemApp)) ...[
+          PullDownMenuItem(
+            title: 'Share',
+            icon: CupertinoIcons.share,
+            onTap: () =>
+                Share.shareXFiles([XFile(app.apkFilePath)], text: app.appName),
+          ),
           PullDownMenuItem(
             title: 'Uninstall',
+            icon: CupertinoIcons.trash,
             onTap: () => app.uninstallApp(),
           ),
+        ]
       ];
 }
