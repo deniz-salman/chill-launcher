@@ -19,6 +19,7 @@ class LauncherViewModel extends ChangeNotifier {
           app.packageName != (await PackageInfo.fromPlatform()).packageName) {
         apps.add((await DeviceApps.getApp(app.packageName, true))
             as ApplicationWithIcon);
+        apps.sort((a, b) => a.appName.compareTo(b.appName));
         notifyListeners();
       }
     }
