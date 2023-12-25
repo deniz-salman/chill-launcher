@@ -1,5 +1,6 @@
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class LauncherViewModel extends ChangeNotifier {
   List<ApplicationWithIcon> apps = [];
@@ -15,7 +16,7 @@ class LauncherViewModel extends ChangeNotifier {
       onlyAppsWithLaunchIntent: true,
     )) {
       if (app is ApplicationWithIcon &&
-          app.packageName != 'com.example.launcher') {
+          app.packageName != (await PackageInfo.fromPlatform()).packageName) {
         apps.add((await DeviceApps.getApp(app.packageName, true))
             as ApplicationWithIcon);
       }

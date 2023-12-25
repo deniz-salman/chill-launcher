@@ -15,6 +15,7 @@ dependencies:
   device_apps: ^2.2.0
   flutter_screenutil: ^5.9.0
   pull_down_button: ^0.9.3
+  package_info_plus: ^5.0.1
 
 dev_dependencies:
   flutter_test:
