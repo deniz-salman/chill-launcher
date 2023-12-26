@@ -22,14 +22,16 @@ class LauncherView extends ConsumerWidget {
         canPop: false,
         child: CupertinoPageScaffold(
           backgroundColor: Colors.transparent,
-          child: GridView.count(
-              crossAxisCount: 4,
-              childAspectRatio: .8,
-              crossAxisSpacing: 0,
-              children: [
-                for (ApplicationWithIcon app in launcherViewModel.apps)
-                  AppView(app: app)
-              ]),
+          child: launcherViewModel.apps == null
+              ? const CupertinoActivityIndicator()
+              : GridView.count(
+                  crossAxisCount: 4,
+                  childAspectRatio: .8,
+                  crossAxisSpacing: 0,
+                  children: [
+                      for (ApplicationWithIcon app in launcherViewModel.apps!)
+                        AppView(app: app)
+                    ]),
         ),
       ),
     );
