@@ -69,4 +69,10 @@ class LauncherViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  onTabApp(ApplicationWithIcon app) {
+    app.openApp();
+    onPopInvoked();
+    searchFocusNode.unfocus();
+  }
 }

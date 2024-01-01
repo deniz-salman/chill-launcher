@@ -61,7 +61,8 @@ class LauncherView extends ConsumerWidget {
                       children: [
                         searchTextField,
                         launcherViewModel.appViews.isEmpty
-                            ? const Text('No apps found')
+                            ? const Expanded(
+                                child: Center(child: Text('No apps found')))
                             : Expanded(flex: 20, child: appList),
                       ],
                     ),

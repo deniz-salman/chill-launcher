@@ -1,22 +1,25 @@
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:launcher/view/launcher_view.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:share_plus/share_plus.dart';
 
-class AppView extends StatelessWidget {
+class AppView extends ConsumerWidget {
   const AppView({super.key, required this.app});
 
   final ApplicationWithIcon app;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final launcherViewModel = ref.watch(launcherViewModelProvider);
     return PullDownButton(
       itemBuilder: (context) => contextMenuList,
       buttonBuilder: (context, showMenu) => GestureDetector(
         onLongPress: showMenu,
         child: CupertinoButton(
-          onPressed: () => app.openApp(),
+          onPressed: () => launcherViewModel.onTabApp(app),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
