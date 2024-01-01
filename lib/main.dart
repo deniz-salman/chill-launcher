@@ -7,21 +7,24 @@ void main(List<String> args) {
   runApp(const App());
 }
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const ProviderScope(
+    return ProviderScope(
       child: ScreenUtilInit(
         child: CupertinoApp(
-          theme: CupertinoThemeData(
+          navigatorKey: navigatorKey,
+          theme: const CupertinoThemeData(
             brightness: Brightness.dark,
             primaryColor: CupertinoColors.white,
             scaffoldBackgroundColor: CupertinoColors.black,
           ),
           title: 'Launcher',
-          home: LauncherView(),
+          home: const LauncherView(),
         ),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:launcher/main.dart';
 import 'package:launcher/subview/app_view.dart';
+import 'package:launcher/view/launcher_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class LauncherViewModel extends ChangeNotifier {
@@ -70,8 +72,23 @@ class LauncherViewModel extends ChangeNotifier {
     }
   }
 
-  onTabApp(ApplicationWithIcon app) {
-    app.openApp();
+  onTabApp(ApplicationWithIcon app) async {
+    navigatorKey.currentState?.push(
+      PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) {
+        return FadeTransition(
+          opacity: animation,
+          child: Container(
+              color: CupertinoColors.black.withOpacity(.4),
+              child: Hero(tag: app.packageName, child: Image.memory(app.icon))),
+        );
+      }),
+    );
+    await Future.delayed(const Duration(milliseconds: 300), () async {
+      await app.openApp();
+    });
+    await Future.delayed(const Duration(milliseconds: 300), () {
+      navigatorKey.currentState?.pop();
+    });
     onPopInvoked();
     searchFocusNode.unfocus();
   }

@@ -45,7 +45,14 @@ class AppView extends ConsumerWidget {
               ),
             ],
           ),
-          child: Image.memory(app.icon)));
+          child: Hero(
+              tag: app.packageName,
+              flightShuttleBuilder: (flightContext, animation, direction,
+                  fromContext, toContext) {
+                final hero = fromContext.widget as Hero;
+                return hero.child;
+              },
+              child: Image.memory(app.icon))));
 
   Widget get appName => Text(
         app.appName,
