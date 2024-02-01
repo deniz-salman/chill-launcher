@@ -2,6 +2,8 @@ import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
+
 import 'package:launcher/view/launcher_view.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:share_plus/share_plus.dart';
@@ -17,7 +19,14 @@ class AppView extends ConsumerWidget {
     return PullDownButton(
       itemBuilder: (context) => contextMenuList,
       buttonBuilder: (context, showMenu) => GestureDetector(
-        onLongPress: showMenu,
+        onLongPress: () async {
+          if (await Vibrate.canVibrate) {
+            Vibrate.feedback(FeedbackType.light);
+            await Future.delayed(const Duration(milliseconds: 60));
+            Vibrate.feedback(FeedbackType.light);
+          }
+          await showMenu();
+        },
         child: CupertinoButton(
           onPressed: () => launcherViewModel.onTabApp(app),
           child: Column(
