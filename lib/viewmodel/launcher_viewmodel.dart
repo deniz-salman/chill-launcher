@@ -2,12 +2,50 @@ import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:launcher/main.dart';
 import 'package:launcher/subview/app_view.dart';
-import 'package:launcher/view/launcher_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LauncherViewModel extends ChangeNotifier {
   List<ApplicationWithIcon>? apps;
 
+  final sharedPrefences = SharedPreferences.getInstance();
+
+  addRecentApp(ApplicationWithIcon app) async {
+    final recentApps = await sharedPrefences
+        .then((value) => value.getStringList('recentApps') ?? <String>[]);
+
+    if (recentApps.contains(app.packageName)) {
+      recentApps.remove(app.packageName);
+    }
+
+    recentApps.insert(0, app.packageName);
+
+    if (recentApps.length > 4) {
+      recentApps.removeLast();
+    }
+
+    await sharedPrefences.then(
+        (value) async => await value.setStringList('recentApps', recentApps));
+
+    updateRecentApps();
+
+    notifyListeners();
+  }
+
+  updateRecentApps() async {
+    final recentApps = await sharedPrefences
+        .then((value) => value.getStringList('recentApps') ?? <String>[]);
+
+    recentAppViews = recentApps
+        .map((e) => AppView(
+              app: apps!.firstWhere((element) => element.packageName == e),
+            ))
+        .toList();
+
+    notifyListeners();
+  }
+
+  List<Widget> recentAppViews = [];
   List<Widget> appViews = [];
 
   final searchController = TextEditingController();
@@ -68,6 +106,7 @@ class LauncherViewModel extends ChangeNotifier {
     if (apps != tempApps) {
       apps = tempApps;
       appViews = apps!.map((e) => AppView(app: e)).toList();
+      updateRecentApps();
       notifyListeners();
     }
   }
@@ -85,6 +124,7 @@ class LauncherViewModel extends ChangeNotifier {
     );
     await Future.delayed(const Duration(milliseconds: 300), () async {
       await app.openApp();
+      addRecentApp(app);
     });
     await Future.delayed(const Duration(milliseconds: 300), () {
       navigatorKey.currentState?.pop();

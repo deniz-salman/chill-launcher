@@ -16,6 +16,29 @@ class AppView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final launcherViewModel = ref.watch(launcherViewModelProvider);
+
+    List<PullDownMenuEntry> contextMenuList = [
+      PullDownMenuItem(
+        title: 'Open Settings',
+        icon: CupertinoIcons.settings,
+        onTap: () => app.openSettingsScreen(),
+      ),
+      if (!(app.systemApp)) ...[
+        PullDownMenuItem(
+          title: 'Share',
+          icon: CupertinoIcons.share,
+          onTap: () =>
+              Share.shareXFiles([XFile(app.apkFilePath)], text: app.appName),
+        ),
+        PullDownMenuItem(
+          title: 'Uninstall',
+          icon: CupertinoIcons.trash,
+          onTap: () async =>
+              (await app.uninstallApp()) ? launcherViewModel.init() : null,
+        ),
+      ]
+    ];
+
     return PullDownButton(
       itemBuilder: (context) => contextMenuList,
       buttonBuilder: (context, showMenu) => GestureDetector(
@@ -76,25 +99,4 @@ class AppView extends ConsumerWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       );
-
-  List<PullDownMenuEntry> get contextMenuList => [
-        PullDownMenuItem(
-          title: 'Open Settings',
-          icon: CupertinoIcons.settings,
-          onTap: () => app.openSettingsScreen(),
-        ),
-        if (!(app.systemApp)) ...[
-          PullDownMenuItem(
-            title: 'Share',
-            icon: CupertinoIcons.share,
-            onTap: () =>
-                Share.shareXFiles([XFile(app.apkFilePath)], text: app.appName),
-          ),
-          PullDownMenuItem(
-            title: 'Uninstall',
-            icon: CupertinoIcons.trash,
-            onTap: () => app.uninstallApp(),
-          ),
-        ]
-      ];
 }

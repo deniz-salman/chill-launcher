@@ -34,7 +34,17 @@ class LauncherView extends ConsumerWidget {
         shrinkWrap: true,
         childAspectRatio: .8,
         crossAxisSpacing: 0,
+        physics: const NeverScrollableScrollPhysics(),
         children: launcherViewModel.appViews);
+
+    final recentAppList = GridView.count(
+      crossAxisCount: 4,
+      shrinkWrap: true,
+      childAspectRatio: .8,
+      crossAxisSpacing: 0,
+      physics: const NeverScrollableScrollPhysics(),
+      children: launcherViewModel.recentAppViews,
+    );
 
     return SafeArea(
       child: PopScope(
@@ -63,7 +73,26 @@ class LauncherView extends ConsumerWidget {
                         launcherViewModel.appViews.isEmpty
                             ? const Expanded(
                                 child: Center(child: Text('No apps found')))
-                            : Expanded(flex: 20, child: appList),
+                            : Expanded(
+                                flex: 20,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      recentAppList,
+                                      if (launcherViewModel
+                                          .recentAppViews.isNotEmpty)
+                                        const Divider(
+                                          height: 0,
+                                          thickness: .75,
+                                          indent: 20,
+                                          endIndent: 20,
+                                        ),
+                                      appList,
+                                    ],
+                                  ),
+                                )),
                       ],
                     ),
             ),
