@@ -1,9 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:launcher/model/app_model.dart';
 import 'package:launcher/view/launcher_view.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main(List<String> args) {
+late Box<AppModel> appBox;
+late Directory documentDirectory;
+
+Future<void> main(List<String> args) async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(AppModelAdapter());
+  appBox = await Hive.openBox<AppModel>('apps');
+
+  documentDirectory = await getApplicationDocumentsDirectory();
   runApp(const App());
 }
 
