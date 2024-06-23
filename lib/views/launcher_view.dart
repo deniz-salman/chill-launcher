@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:launcher/main.dart';
-import 'package:launcher/subview/app_view.dart';
-import 'package:launcher/viewmodel/launcher_viewmodel.dart';
+import 'package:launcher/subviews/app_view.dart';
+import 'package:launcher/viewmodels/launcher_viewmodel.dart';
 
 final launcherViewModelProvider =
     ChangeNotifierProvider((ref) => LauncherViewModel());

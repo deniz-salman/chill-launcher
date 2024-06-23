@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:launcher/model/app_model.dart';
+import 'package:launcher/models/app_model.dart';
 
-import 'package:launcher/view/launcher_view.dart';
+import 'package:launcher/views/launcher_view.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:share_plus/share_plus.dart';
 

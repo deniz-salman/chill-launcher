@@ -5,7 +5,7 @@ import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:launcher/main.dart';
-import 'package:launcher/model/app_model.dart';
+import 'package:launcher/models/app_model.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 

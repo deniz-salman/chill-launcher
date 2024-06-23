@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:launcher/model/app_model.dart';
-import 'package:launcher/view/launcher_view.dart';
+import 'package:launcher/models/app_model.dart';
+import 'package:launcher/views/launcher_view.dart';
 import 'package:path_provider/path_provider.dart';
 
 late Box<AppModel> appBox;
