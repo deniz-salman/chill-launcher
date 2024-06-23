@@ -1,4 +1,4 @@
-package com.example.launcher
+package dev.denizsalman.launcher
 
 import android.os.Bundle
 import android.view.WindowManager
