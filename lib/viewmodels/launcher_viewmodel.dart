@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:launcher/main.dart';
 import 'package:launcher/models/app_model.dart';
+import 'package:launcher/views/settings_view.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 
@@ -57,6 +58,10 @@ class LauncherViewModel extends ChangeNotifier {
 
     for (var e in apps) {
       appBox.put(e.packageName, AppModel().toApp(e));
+      if (e.packageName == packageInfo.packageName) {
+        appBox.put(
+            e.packageName, appBox.get(e.packageName)!..appName = "Settings");
+      }
     }
 
     for (var e in appBox.values) {
@@ -66,9 +71,7 @@ class LauncherViewModel extends ChangeNotifier {
     }
   }
 
-  onSearchChanged() {
-    notifyListeners();
-  }
+  onSearchChanged() => notifyListeners();
 
   init() async {
     log('init');
@@ -88,32 +91,41 @@ class LauncherViewModel extends ChangeNotifier {
   }
 
   onTabApp(AppModel app) async {
-    navigatorKey.currentState?.push(
-      PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(
-          opacity: animation,
-          child: Container(
-              color: CupertinoColors.black.withOpacity(.4),
-              child: Hero(
-                  tag: app.packageName,
-                  child: Image.memory(app.icon))),
-        );
-      }),
-    );
-    await Future.delayed(const Duration(milliseconds: 300), () async {
-      await DeviceApps.openApp(app.packageName);
+    if (app.packageName == packageInfo.packageName) {
+      navigatorKey.currentState?.push(
+        CupertinoPageRoute(builder: (context) => const SettingsView()),
+      );
       appBox.put(
         app.packageName,
         app
           ..lastOpened = DateTime.now()
           ..timesOpened += 1,
       );
-      log(appBox.get(app.packageName)!.lastOpened.toString());
-      log(appBox.get(app.packageName)!.timesOpened.toString());
-    });
-    await Future.delayed(const Duration(milliseconds: 300), () {
-      navigatorKey.currentState?.pop();
-    });
+    } else {
+      navigatorKey.currentState?.push(
+        PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: animation,
+            child: Container(
+                color: CupertinoColors.black.withOpacity(.4),
+                child:
+                    Hero(tag: app.packageName, child: Image.memory(app.icon))),
+          );
+        }),
+      );
+      await Future.delayed(const Duration(milliseconds: 300), () async {
+        await DeviceApps.openApp(app.packageName);
+        appBox.put(
+          app.packageName,
+          app
+            ..lastOpened = DateTime.now()
+            ..timesOpened += 1,
+        );
+      });
+      await Future.delayed(const Duration(milliseconds: 300), () {
+        navigatorKey.currentState?.pop();
+      });
+    }
     onPopInvoked();
     searchFocusNode.unfocus();
   }

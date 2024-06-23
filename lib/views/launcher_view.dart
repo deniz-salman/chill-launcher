@@ -18,16 +18,24 @@ class LauncherView extends ConsumerWidget {
 
     final searchTextField = Padding(
       padding: const EdgeInsets.only(right: 18, left: 18, top: 20),
-      child: CupertinoSearchTextField(
-        focusNode: launcherViewModel.searchFocusNode,
-        borderRadius: BorderRadius.circular(10),
-        controller: launcherViewModel.searchController,
-        onChanged: (value) => launcherViewModel.onSearchChanged(),
-        style: TextStyle(
-          color: CupertinoColors.white,
-          fontSize: 17.sp,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+              color: CupertinoTheme.of(context).primaryColor, width: .15),
         ),
-        placeholder: 'Search',
+        child: CupertinoSearchTextField(
+          backgroundColor: CupertinoTheme.of(context)
+              .scaffoldBackgroundColor
+              .withOpacity(.50),
+          focusNode: launcherViewModel.searchFocusNode,
+          controller: launcherViewModel.searchController,
+          onChanged: (value) => launcherViewModel.onSearchChanged(),
+          style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                fontSize: 17.sp,
+              ),
+          placeholder: 'Search',
+        ),
       ),
     );
 
@@ -66,10 +74,12 @@ class LauncherView extends ConsumerWidget {
                 launcherViewModel.searchController.text.isNotEmpty
                     ? Text(
                         'No apps found',
-                        style: TextStyle(
-                          color: CupertinoColors.white,
-                          fontSize: 17.sp,
-                        ),
+                        style: CupertinoTheme.of(context)
+                            .textTheme
+                            .textStyle
+                            .copyWith(
+                                fontSize: 17.sp,
+                                color: CupertinoColors.systemGrey),
                       )
                     : const CupertinoActivityIndicator(
                         radius: 15,

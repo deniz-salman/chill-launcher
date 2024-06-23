@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:launcher/main.dart';
 import 'package:launcher/models/app_model.dart';
-
 import 'package:launcher/views/launcher_view.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:share_plus/share_plus.dart';
@@ -51,7 +51,7 @@ class AppView extends ConsumerWidget {
               ],
             ),
             child: Hero(
-                tag: app.packageName ,
+                tag: app.packageName,
                 flightShuttleBuilder: (flightContext, animation, direction,
                     fromContext, toContext) {
                   final hero = fromContext.widget as Hero;
@@ -59,6 +59,23 @@ class AppView extends ConsumerWidget {
                 },
                 child: Image.file(
                     launcherViewModel.getIconFile(app.packageName)))));
+
+    Widget appName = Text(
+      app.packageName == packageInfo.packageName ? "Settings" : app.appName,
+      style: CupertinoTheme.of(context).textTheme.navTitleTextStyle.copyWith(
+          fontSize: 11.sp,
+          color: CupertinoColors.systemGrey5,
+          shadows: const [
+            Shadow(
+              blurRadius: 10.0,
+              color: CupertinoColors.black,
+              offset: Offset(1.0, 1.0),
+            ),
+          ]),
+      textAlign: TextAlign.center,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
 
     return PullDownButton(
       itemBuilder: (context) => contextMenuList,
@@ -72,8 +89,7 @@ class AppView extends ConsumerWidget {
           await showMenu();
         },
         child: CupertinoButton(
-          onPressed: () =>
-              launcherViewModel.onTabApp(app),
+          onPressed: () => launcherViewModel.onTabApp(app),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,18 +102,4 @@ class AppView extends ConsumerWidget {
       ),
     );
   }
-
-  Widget get appName => Text(
-        app.appName,
-        style: TextStyle(fontSize: 11.sp, shadows: const [
-          Shadow(
-            blurRadius: 10.0,
-            color: CupertinoColors.black,
-            offset: Offset(1.0, 1.0),
-          ),
-        ]),
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      );
 }
