@@ -34,6 +34,14 @@ class App extends ConsumerWidget {
     final settingsViewModel = ref.watch(settingsViewModelProvider);
     return ScreenUtilInit(
       child: CupertinoApp(
+        builder: (_, child) => IconTheme(
+          data: IconThemeData(
+            color: settingsViewModel.isDarkMode
+                ? CupertinoColors.white
+                : CupertinoColors.black,
+          ),
+          child: child!,
+        ),
         navigatorKey: navigatorKey,
         theme: settingsViewModel.isDarkMode
             ? const CupertinoThemeData(
@@ -43,6 +51,7 @@ class App extends ConsumerWidget {
             : const CupertinoThemeData(
                 brightness: Brightness.light,
                 primaryColor: CupertinoColors.systemGrey,
+                primaryContrastingColor: CupertinoColors.black,
               ),
         title: 'Launcher',
         home: const LauncherView(),

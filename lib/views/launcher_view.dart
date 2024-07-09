@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:launcher/main.dart';
 import 'package:launcher/subviews/app_view.dart';
+import 'package:launcher/subviews/google_search_view.dart';
 import 'package:launcher/viewmodels/launcher_viewmodel.dart';
 
 final launcherViewModelProvider =
@@ -40,7 +41,7 @@ class LauncherView extends ConsumerWidget {
     );
 
     Widget getAppList() {
-      final applist = appBox.values.map((e) => AppView(app: e)).where(
+      var applist = appBox.values.map((e) => AppView(app: e)).where(
         (element) {
           final app = element.app;
           final searchQuery = launcherViewModel.searchController.text;
@@ -58,6 +59,10 @@ class LauncherView extends ConsumerWidget {
                 appA.lastOpened ?? DateTime.fromMicrosecondsSinceEpoch(0));
       });
 
+      applist = launcherViewModel.searchController.text.isNotEmpty
+          ? applist.take(8).toList()
+          : applist;
+
       final appGridList = GridView.count(
         crossAxisCount: 4,
         shrinkWrap: true,
@@ -67,20 +72,16 @@ class LauncherView extends ConsumerWidget {
         children: applist,
       );
 
+      if (applist.isEmpty) {
+        return Container();
+      }
+
       return applist.isEmpty
           ? Column(
               children: [
                 240.verticalSpace,
                 launcherViewModel.searchController.text.isNotEmpty
-                    ? Text(
-                        'No apps found',
-                        style: CupertinoTheme.of(context)
-                            .textTheme
-                            .textStyle
-                            .copyWith(
-                                fontSize: 17.sp,
-                                color: CupertinoColors.systemGrey),
-                      )
+                    ? Container()
                     : const CupertinoActivityIndicator(
                         radius: 15,
                       ),
@@ -97,6 +98,7 @@ class LauncherView extends ConsumerWidget {
           backgroundColor: Colors.transparent,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               searchTextField,
               appBox.isEmpty
@@ -107,8 +109,20 @@ class LauncherView extends ConsumerWidget {
                     )))
                   : Expanded(
                       flex: 20,
-                      child: SingleChildScrollView(
-                        child: getAppList(),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              20.verticalSpace,
+                              getAppList(),
+                              const GoogleSearchView(),
+                              20.verticalSpace,
+                            ],
+                          ),
+                        ),
                       )),
             ],
           ),

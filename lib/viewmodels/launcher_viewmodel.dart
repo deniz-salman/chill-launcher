@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:launcher/main.dart';
 import 'package:launcher/models/app_model.dart';
+import 'package:launcher/services/google_search.dart';
 import 'package:launcher/views/settings_view.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
@@ -16,6 +17,8 @@ class LauncherViewModel extends ChangeNotifier {
   final searchFocusNode = FocusNode();
 
   final iconsDirectory = Directory(p.join(documentDirectory.path, 'icons'));
+
+  List<String> googleSearchSuggestions = [];
 
   LauncherViewModel() {
     init();
@@ -71,7 +74,26 @@ class LauncherViewModel extends ChangeNotifier {
     }
   }
 
-  onSearchChanged() => notifyListeners();
+  onSearchChanged() {
+    notifyListeners();
+    if (searchController.text.isNotEmpty) {
+      GoogleSearch.getSuggestions(searchController.text).then((value) {
+        googleSearchSuggestions = value;
+        notifyListeners();
+      });
+    } else {
+      googleSearchSuggestions = [];
+      notifyListeners();
+    }
+  }
+
+  onTabGoogleSuggestion(String suggestion) {
+    GoogleSearch.openSearch(suggestion);
+    googleSearchSuggestions = [];
+    searchController.clear();
+    searchFocusNode.unfocus();
+    notifyListeners();
+  }
 
   init() async {
     log('init');
