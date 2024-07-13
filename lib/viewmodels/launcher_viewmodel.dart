@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_contacts/contact.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:launcher/main.dart';
 import 'package:launcher/models/app_model.dart';
@@ -10,6 +12,7 @@ import 'package:launcher/services/google_search.dart';
 import 'package:launcher/views/settings_view.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+import 'package:permission_handler/permission_handler.dart';
 
 class LauncherViewModel extends ChangeNotifier {
   final searchController = TextEditingController();
@@ -19,6 +22,7 @@ class LauncherViewModel extends ChangeNotifier {
   final iconsDirectory = Directory(p.join(documentDirectory.path, 'icons'));
 
   List<String> googleSearchSuggestions = [];
+  List<Contact> contactsSearchResult = [];
 
   LauncherViewModel() {
     init();
@@ -81,6 +85,21 @@ class LauncherViewModel extends ChangeNotifier {
         googleSearchSuggestions = value;
         notifyListeners();
       });
+      Permission.contacts.isGranted.then((value) {
+        if (value) {
+          FlutterContacts.getContacts().then(
+            (value) {
+              contactsSearchResult = value
+                  .where(
+                      (element) => element.displayName.toLowerCase().contains(
+                            searchController.text.toLowerCase(),
+                          ))
+                  .toList();
+              notifyListeners();
+            },
+          );
+        }
+      });
     } else {
       googleSearchSuggestions = [];
       notifyListeners();
@@ -90,6 +109,13 @@ class LauncherViewModel extends ChangeNotifier {
   onTabGoogleSuggestion(String suggestion) {
     GoogleSearch.openSearch(suggestion);
     googleSearchSuggestions = [];
+    searchController.clear();
+    searchFocusNode.unfocus();
+    notifyListeners();
+  }
+
+  onTabContact(Contact contact) async {
+    await FlutterContacts.openExternalView(contact.id);
     searchController.clear();
     searchFocusNode.unfocus();
     notifyListeners();

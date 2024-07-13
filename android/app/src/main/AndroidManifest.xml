@@ -3,7 +3,8 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.VIBRATE"/>
-
+    <uses-permission android:name="android.permission.READ_CONTACTS" />  
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <queries>
         <intent>
         <action android:name="android.support.customtabs.action.CustomTabsService" />
@@ -13,12 +14,10 @@
         <data android:scheme="https" />
         </intent>
     </queries>
-
     <application
         android:label="launcher"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-         
         <activity
             android:name=".MainActivity"
             android:exported="true"

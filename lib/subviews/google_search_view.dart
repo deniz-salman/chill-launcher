@@ -13,7 +13,7 @@ class GoogleSearchView extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (launcherViewModel.searchController.text.isNotEmpty)
-          ...launcherViewModel.googleSuggestions
+          ...launcherViewModel.googleSearchSuggestions
               .map(
                 (e) => Padding(
                   padding:

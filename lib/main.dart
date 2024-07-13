@@ -8,6 +8,7 @@ import 'package:launcher/views/launcher_view.dart';
 import 'package:launcher/views/settings_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 late Box<AppModel> appBox;
@@ -23,6 +24,12 @@ Future<void> main(List<String> args) async {
   documentDirectory = await getApplicationDocumentsDirectory();
   sharedPreferences = await SharedPreferences.getInstance();
   packageInfo = await PackageInfo.fromPlatform();
+
+  bool isGrantedContact = await Permission.contacts.isGranted;
+  if (!isGrantedContact) {
+    await Permission.contacts.request();
+  }
+
   runApp(const ProviderScope(child: App()));
 }
 

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:launcher/main.dart';
 import 'package:launcher/subviews/app_view.dart';
+import 'package:launcher/subviews/contacts_search.dart';
 import 'package:launcher/subviews/google_search_view.dart';
 import 'package:launcher/viewmodels/launcher_viewmodel.dart';
 
@@ -118,6 +119,7 @@ class LauncherView extends ConsumerWidget {
                             children: [
                               20.verticalSpace,
                               getAppList(),
+                              const ContactsSearchView(),
                               const GoogleSearchView(),
                               20.verticalSpace,
                             ],
